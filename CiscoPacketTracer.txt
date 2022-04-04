@@ -1,0 +1,79 @@
+---Console mode---
+en
+conf t
+line console 0
+password *****
+login
+end
+
+---Telnet---
+en
+conf t
+interface vlan 1
+ip address 10.0.0.1 255.0.0.0
+no shutdown
+exit
+line vty 0 15
+password ****
+login
+end 
+
+---User Login Telnet---
+en
+conf t
+usarname User password ****
+line console 0
+login local
+exit
+line vty 0 15
+login local
+exit 
+
+---SSH---
+en
+conf t
+hostname S1
+ip domain name khazar.org
+crypto key generate rsa
+1024
+username cisco password ****
+line vty 0 15
+login local
+transport input ssh
+end
+conf t 
+interface vlan 1
+ip address 20.0.0.2 255.0.0.0
+no shutdown
+end
+
+---Duplex---
+en 
+conf t
+int fa0/1
+speed 10
+duplex full
+end
+int fa0/2
+speed 10
+duplex full
+end
+
+---Vlan---
+en
+conf t
+vlan 20 
+name 20
+exit
+vlan 30
+name 30
+exit
+int range fa0/1-2
+switchport mode access
+switchport access vlan 20
+exit
+int range fa0/3-4
+switchport mode access
+switchport access vlan 30
+exit
+
